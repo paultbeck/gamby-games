@@ -12,13 +12,16 @@ const prog_uchar smiley8x8_mask[] PROGMEM = {
 };
 
 GambyGraphicsMode gamby;
+
+static int Delta = 2;
+
 int xPos;
 int yPos;
 int hDirection;
 int vDirection;
 
-static int SPRITE_WIDTH = 8;
-static int SPRITE_HEIGHT = 8;
+int width = 16;
+int height = 16;
 
 void setup () {
   gamby = GambyGraphicsMode();
@@ -32,21 +35,24 @@ void setup () {
 
 void loop () {
   gamby.clearScreen();
-  gamby.drawSprite(xPos, yPos, smiley8x8, smiley8x8_mask);
-  if (hDirection == 1) {xPos++;}
-  else {xPos--;}
-  if (vDirection == 1) {yPos++;}
-  else {yPos--;}
+  //gamby.drawSprite(xPos, yPos, smiley8x8, smiley8x8_mask);
+  gamby.drawPattern=0xFFFF;
+  gamby.disc(xPos + width / 2, yPos + height / 2, width / 2);
+  if (hDirection == 1) {xPos+=Delta;}
+  else {xPos-=Delta;}
+  if (vDirection == 1) {yPos+=Delta;}
+  else {yPos-=Delta;}
   gamby.update();
-  delay(50);
+  updateDirection();
+  delay(25);
 }
 
 void updateDirection() {
-  if (xPos < 0 || xPos > NUM_COLUMNS - SPRITE_WIDTH)
+  if (xPos < 0 || xPos > NUM_COLUMNS - width)
   {
     hDirection = (hDirection + 1) % 2;
   }
-  if (yPos < 0 || yPos > NUM_ROWS - SPRITE_HEIGHT)
+  if (yPos < 0 || yPos > NUM_ROWS - height)
   {
     vDirection = (vDirection + 1) % 2;
   }  
